@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Button } from "./buttons";
 import { Card, CardContent } from "./card";
-import { ArrowRight, Mail, Phone, ExternalLink, HeartOff } from "lucide-react";
+import { ArrowRight, Mail, Phone, ExternalLink } from "lucide-react";
 
 const navigationItems = [
   { label: "Home", href: "#" },
@@ -260,7 +260,7 @@ export const Desktop = (): JSX.Element => {
               }}
             />
           ))}
-          
+
         </div>
       </div>
 
