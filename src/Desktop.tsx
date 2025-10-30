@@ -260,6 +260,7 @@ export const Desktop = (): JSX.Element => {
               }}
             />
           ))}
+          
         </div>
       </div>
 
