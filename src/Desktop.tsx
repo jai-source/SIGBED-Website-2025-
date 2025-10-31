@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "./buttons";
 import { Card, CardContent } from "./card";
 import { ArrowRight, Mail, Phone, ExternalLink } from "lucide-react";
@@ -48,39 +48,101 @@ const projects = [
     title: "Quadcopter",
     description:
       "A versatile aerial drone, the Quadcopter serves multiple applications with its agility and maneuverability. From aerial photography to surveillance, this project explores the potential of unmanned aerial vehicles in various fields.",
-    
+    image: "https://live.staticflickr.com/65535/53420797170_a34aa7d830_z.jpg"
   },
   {
     title: "3D Printed Planes",
     description:
       "Fusing technology and education, this project utilizes 3D printing to create miniature planes. Beyond being a fascinating hands-on activity, it offers insights into aerodynamics and the principles of flight.",
-    
+    image: "https://live.staticflickr.com/65535/53428135523_a5116006b7_z.jpg"
   },
   {
     title: "Bluetooth Car Using Arduino",
     description:
       "Integrating Arduino and Bluetooth technology, this project results in a remote-controlled car. Beyond the fun aspect, it serves as a practical application of embedded systems and wireless communication.",
-    
+    image: "https://live.staticflickr.com/65535/53420373396_d858a23434_z.jpg"
   },
   {
     title: "Omnidirectional Car",
     description:
       "Redefining mobility, the Omnidirectional Car incorporates wheels that can move in any direction. This innovative design enhances maneuverability, making it suitable for applications where precise movement is essential.",
-    
+    image: "https://live.staticflickr.com/65535/53415719634_e824abd906_z.jpg"
   },
   {
     title: "Gesture Controlled Car",
     description:
       "Redefining human-machine interaction, this project enables car control through gesture recognition. By harnessing computer vision, it adds a layer of intuitive control to vehicle navigation.",
-    
+    image: "https://live.staticflickr.com/65535/53419285102_4e2556ece4_z.jpg"
   },
   {
     title: "RFID Door Lock/Unlock System",
     description:
       "Elevating security, this project implements RFID technology for door access control. Offering convenience and enhanced security, it showcases the integration of advanced technologies in everyday applications.",
-    
+    image: "https://live.staticflickr.com/65535/53420638400_fd7a6e5319_z.jpg"
+  },
+  {
+    title: "Radar",
+    description:
+      "Exploring radar technology, this project has applications in object detection and tracking. From security systems to autonomous vehicles, radar plays a crucial role in sensing and understanding the environment.",
+    image: "https://live.staticflickr.com/65535/53420527394_4030781740_z.jpg"
+  },
+  {
+    title: "5DoF Robotic Arm",
+    description:
+      "With five degrees of freedom, this robotic arm is designed for precise and controlled movements. It finds applications in various fields, including manufacturing, research, and automation, showcasing the versatility of robotic technologies.",
+    image: "https://live.staticflickr.com/65535/53420378066_4b35868d0d_z.jpg"
+  },
+  {
+    title: "FPV Racing Drone",
+    description:
+      "Delivering an immersive flying experience, the FPV Racing Drone combines speed and technology. It opens up possibilities for recreational and competitive drone racing, showcasing the excitement and potential of drone technology.",
+    image: "https://live.staticflickr.com/65535/53415896455_6e17bd8925_z.jpg"
   },
 ];
+
+const ProjectCard = ({ project }: { project: typeof projects[0] }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
+  };
+
+  return (
+    <Card
+      className="bg-gradient-to-br from-gray-900/90 to-black/90 border-purple-500/30 backdrop-blur-xl hover:border-purple-400/60 hover:shadow-2xl hover:shadow-purple-500/20 hover:scale-[1.02] hover:-translate-y-2 transition-all duration-300 group overflow-hidden"
+    >
+      <CardContent className="p-0">
+        <div className="h-48 bg-gradient-to-br from-purple-600/20 to-pink-600/20 flex items-center justify-center text-8xl rounded-t-lg overflow-hidden">
+          {project.image ? (
+            <img 
+              src={project.image} 
+              alt={project.title}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+          ) : null}
+        </div>
+        
+        <div className="p-6">
+          <h3 className="text-xl font-bold text-pink-400 mb-3 group-hover:text-pink-300 transition-colors">
+            {project.title}
+          </h3>
+          <p className="text-gray-400 group-hover:text-gray-300 transition-colors text-sm leading-relaxed">
+            {isExpanded ? project.description : truncateText(project.description, 80)}
+          </p>
+          {project.description.length > 80 && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-purple-400 hover:text-purple-300 text-sm font-semibold mt-2 transition-colors"
+            >
+              {isExpanded ? "Read less" : "Read more"}
+            </button>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 export const Desktop = (): JSX.Element => {
 
@@ -242,6 +304,7 @@ export const Desktop = (): JSX.Element => {
               }}
             />
           ))}
+
         </div>
       </div>
 
@@ -364,7 +427,7 @@ export const Desktop = (): JSX.Element => {
       {/* Blogs Section */}
       <section id="blogs" className="relative py-32 px-8">
         <div className="container mx-auto">
-          <h2 className="text-6xl font-bold text-center mb-16 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <h2 className="text-6xl font-bold text-center mb-16 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight pb-2">
             Our Blogs
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -429,25 +492,12 @@ export const Desktop = (): JSX.Element => {
       {/* Projects Section */}
       <section id="projects" className="relative py-32 px-8">
         <div className="container mx-auto">
-          <h2 className="text-6xl font-bold text-center mb-16 bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent">
+          <h2 className="text-6xl font-bold text-center mb-16 bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent leading-tight pb-2">
             Our Projects
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {projects.map((project, index) => (
-              <Card
-                key={index}
-                className="bg-gradient-to-br from-gray-900/90 to-black/90 border-purple-500/30 backdrop-blur-xl hover:scale-105 transition-all duration-300 group"
-              >
-                <CardContent className="p-0">
-                  <div className="h-64 bg-gradient-to-br from-purple-600/20 to-pink-600/20 flex items-center justify-center text-8xl rounded-t-lg group-hover:scale-110 transition-transform"></div>
-                  <div className="p-8">
-                    <h3 className="text-2xl font-bold text-pink-400 mb-4">
-                      {project.title}
-                    </h3>
-                    <p className="text-gray-400">{project.description}</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <ProjectCard key={index} project={project} />
             ))}
           </div>
           <div className="flex justify-center mt-12">
