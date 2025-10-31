@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "./buttons";
 import { Card, CardContent } from "./card";
 import { ArrowRight, Mail, Phone, ExternalLink } from "lucide-react";
@@ -99,6 +99,50 @@ const projects = [
     image: "https://live.staticflickr.com/65535/53415896455_6e17bd8925_z.jpg"
   },
 ];
+
+const ProjectCard = ({ project }: { project: typeof projects[0] }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
+  };
+
+  return (
+    <Card
+      className="bg-gradient-to-br from-gray-900/90 to-black/90 border-purple-500/30 backdrop-blur-xl hover:border-purple-400/60 hover:shadow-2xl hover:shadow-purple-500/20 hover:scale-[1.02] hover:-translate-y-2 transition-all duration-300 group overflow-hidden"
+    >
+      <CardContent className="p-0">
+        <div className="h-48 bg-gradient-to-br from-purple-600/20 to-pink-600/20 flex items-center justify-center text-8xl rounded-t-lg overflow-hidden">
+          {project.image ? (
+            <img 
+              src={project.image} 
+              alt={project.title}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+          ) : null}
+        </div>
+        
+        <div className="p-6">
+          <h3 className="text-xl font-bold text-pink-400 mb-3 group-hover:text-pink-300 transition-colors">
+            {project.title}
+          </h3>
+          <p className="text-gray-400 group-hover:text-gray-300 transition-colors text-sm leading-relaxed">
+            {isExpanded ? project.description : truncateText(project.description, 80)}
+          </p>
+          {project.description.length > 80 && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-purple-400 hover:text-purple-300 text-sm font-semibold mt-2 transition-colors"
+            >
+              {isExpanded ? "Read less" : "Read more"}
+            </button>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 export const Desktop = (): JSX.Element => {
 
@@ -453,29 +497,7 @@ export const Desktop = (): JSX.Element => {
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {projects.map((project, index) => (
-              <Card
-                key={index}
-                className="bg-gradient-to-br from-gray-900/90 to-black/90 border-purple-500/30 backdrop-blur-xl hover:border-purple-400/60 hover:shadow-2xl hover:shadow-purple-500/20 hover:scale-[1.02] hover:-translate-y-2 transition-all duration-300 group overflow-hidden"
-              >
-                <CardContent className="p-0">
-                  <div className="h-64 bg-gradient-to-br from-purple-600/20 to-pink-600/20 flex items-center justify-center text-8xl rounded-t-lg overflow-hidden">
-                    {project.image ? (
-                      <img 
-                        src={project.image} 
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    ) : null}
-                  </div>
-                  
-                  <div className="p-8">
-                    <h3 className="text-2xl font-bold text-pink-400 mb-4 group-hover:text-pink-300 transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-gray-400 group-hover:text-gray-300 transition-colors">{project.description}</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <ProjectCard key={index} project={project} />
             ))}
           </div>
           <div className="flex justify-center mt-12">
