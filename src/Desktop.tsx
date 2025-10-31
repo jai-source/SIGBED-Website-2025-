@@ -168,7 +168,6 @@ export const Desktop = (): JSX.Element => {
   const mouseVelRef = useRef({ x: 0, y: 0 });
   const lastMouseRef = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2, t: performance.now() });
   const lastTickRef = useRef<number>(performance.now());
-
   useEffect(() => {
     let raf = 0;
 
@@ -193,44 +192,42 @@ export const Desktop = (): JSX.Element => {
     window.addEventListener("mousemove", onMove);
 
     function tick() {
-  const positions = positionsRef.current;
-
+      const positions = positionsRef.current;
       const t = performance.now();
       for (let i = 0; i < positions.length; i++) {
         const p = positions[i];
 
-  // small random wandering (scaled by depth so nearer dots are livelier)
-  p.vx += (Math.random() - 0.5) * 0.02 * (1 - p.z);
-  p.vy += (Math.random() - 0.5) * 0.01 * (1 - p.z);
+        // small random wandering (scaled by depth so nearer dots are livelier)
+        p.vx += (Math.random() - 0.5) * 0.02 * (1 - p.z);
+        p.vy += (Math.random() - 0.5) * 0.01 * (1 - p.z);
 
-  // Apply a velocity impulse based on recent mouse movement so particles
-  // continue moving (momentum) after the cursor stops.
-  const mvel = mouseVelRef.current; // px per ms (smoothed)
-  // compute dt (ms) since last tick
-  // advance lastTickRef for consistent timing (value not directly used below)
-  lastTickRef.current = t;
-  // impulse multipliers (tuned small so motion is subtle but persistent)
-  const IMPULSE_X = 0.045; // stronger horizontal fling (increased noticeably)
-  const IMPULSE_Y = 0.015; // vertical impulse (increased noticeably)
-  // convert mvel (px/ms) into a velocity change and apply depth scaling
-  p.vx += mvel.x * IMPULSE_X * (1 - p.z);
-  p.vy += mvel.y * IMPULSE_Y * (1 - p.z);
+        // Apply a velocity impulse based on recent mouse movement so particles
+        // continue moving (momentum) after the cursor stops.
+        const mvel = mouseVelRef.current; // px per ms (smoothed)
+        // advance lastTickRef for consistent timing (value not directly used below)
+        lastTickRef.current = t;
+        // impulse multipliers (tuned small so motion is subtle but persistent)
+        const IMPULSE_X = 0.045; // stronger horizontal fling (increased noticeably)
+        const IMPULSE_Y = 0.015; // vertical impulse (increased noticeably)
+        // convert mvel (px/ms) into a velocity change and apply depth scaling
+        p.vx += mvel.x * IMPULSE_X * (1 - p.z);
+        p.vy += mvel.y * IMPULSE_Y * (1 - p.z);
 
-  // Vertical bobbing to create 3D illusion (sinusoidal based on time + index)
-  const bob = Math.sin(t * 0.002 + i) * (0.35 + (1 - p.z) * 0.9);
-  p.vy += bob * 0.002;
+        // Vertical bobbing to create 3D illusion (sinusoidal based on time + index)
+        const bob = Math.sin(t * 0.002 + i) * (0.35 + (1 - p.z) * 0.9);
+        p.vy += bob * 0.002;
 
         // integrate
         p.x += p.vx;
         p.y += p.vy;
 
-  // slight damping (reduced more so motion stays livelier)
-  p.vx *= 0.85;
-  p.vy *= 0.85;
+        // slight damping (reduced more so motion stays livelier)
+        p.vx *= 0.85;
+        p.vy *= 0.85;
 
         // cap speed for stability (nearer dots allowed to move faster)
         const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-  const MAX_SPEED = 13 * (1 - p.z) + 3.0;
+        const MAX_SPEED = 13 * (1 - p.z) + 3.0;
         if (speed > MAX_SPEED) {
           p.vx = (p.vx / speed) * MAX_SPEED;
           p.vy = (p.vy / speed) * MAX_SPEED;
@@ -264,7 +261,6 @@ export const Desktop = (): JSX.Element => {
       cancelAnimationFrame(raf);
     };
   }, []);
-
 
   return (
     <div className="bg-gradient-to-b from-black via-gray-900 to-black text-white min-h-screen overflow-x-hidden">
@@ -304,7 +300,6 @@ export const Desktop = (): JSX.Element => {
               }}
             />
           ))}
-
         </div>
       </div>
 
@@ -424,6 +419,30 @@ export const Desktop = (): JSX.Element => {
         </div>
       </section>
 
+      {/* Projects Section */}
+      <section id="projects" className="relative py-32 px-8">
+        <div className="container mx-auto">
+          <h2 className="text-6xl font-bold text-center mb-16 bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent leading-tight pb-2">
+            Our Projects
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {projects.slice(0, 3).map((project, index) => (
+              <ProjectCard key={index} project={project} />
+            ))}
+          </div>
+          <div className="flex justify-center mt-12">
+            <div className="bg-purple-600/20 backdrop-blur-sm border border-purple-500/30 rounded-full px-8 py-4">
+              <p className="text-lg">
+                Explore more Projects from{" "}
+                <span className="text-blue-400 font-semibold">
+                  MUJ ACM SIGBED!
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Blogs Section */}
       <section id="blogs" className="relative py-32 px-8">
         <div className="container mx-auto">
@@ -485,30 +504,6 @@ export const Desktop = (): JSX.Element => {
                 MUJ ACM SIGBED!
               </span>
             </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section id="projects" className="relative py-32 px-8">
-        <div className="container mx-auto">
-          <h2 className="text-6xl font-bold text-center mb-16 bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent leading-tight pb-2">
-            Our Projects
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
-              <ProjectCard key={index} project={project} />
-            ))}
-          </div>
-          <div className="flex justify-center mt-12">
-            <div className="bg-purple-600/20 backdrop-blur-sm border border-purple-500/30 rounded-full px-8 py-4">
-              <p className="text-lg">
-                Explore more Projects from{" "}
-                <span className="text-blue-400 font-semibold">
-                  MUJ ACM SIGBED!
-                </span>
-              </p>
-            </div>
           </div>
         </div>
       </section>
